@@ -1,18 +1,31 @@
+import path from 'path';
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin';
+
 
 export default {
-  mode: "development",
-  entry: "./script.ts",
+  mode: 'production',
+  entry: './src/script.ts',
   output: {
-    path: process.cwd(),
-    filename: 'script.js'
+    path: path.join(process.cwd(), 'dist'),
+    filename: 'script.js',
   },
   module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-    ],
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    }],
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [{
+        context: 'src',
+        from: '*.html',
+      }],
+    }),
+  ],
+  optimization: {
+    minimizer: [`...`, new HtmlMinimizerPlugin()],
   },
 };
