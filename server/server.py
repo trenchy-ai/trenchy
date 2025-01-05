@@ -6,7 +6,6 @@ app = Flask(__name__)
 @app.route('/messages')
 def messages():
     last_message_id = request.args.get('last_message_id', type=int, default=-1)
-    print(last_message_id)
     
     connection = sqlite3.connect("trenchy.db")
     try:
