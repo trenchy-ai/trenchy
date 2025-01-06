@@ -2,3 +2,4 @@ node_modules
 server/env
 server/chrome-data
 server/trenchy.db
+env.sh
