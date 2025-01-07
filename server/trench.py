@@ -24,6 +24,7 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     message TEXT NOT NULL,
+    category TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 )
 """)
@@ -42,24 +43,24 @@ def main():
         try:
             # Scan new tokens, and find one that looks interesting
             token, reason = scan()
-            insert_message(f"I'm researching ${token['ticker']} ({token['name']}), {token['contract_address']}. {reason}")
+            insert_message(f"I'm researching ${token['ticker']} ({token['name']}), {token['contract_address']}.\n\n{reason}", "researching")
 
             # Research the token further, and decide whether to buy it
             shouldBuy, reason = research(token, reason)
-            insert_message(f"I've decided {'to buy' if shouldBuy else 'not to buy'} ${token['ticker']} ({token['name']}), {token['contract_address']}. {reason}")
+            insert_message(f"I've decided {'to buy' if shouldBuy else 'not to buy'} ${token['ticker']} ({token['name']}), {token['contract_address']}.\n\n{reason}", "buying" if shouldBuy else "not_buying")
             if shouldBuy:
                 buy('.001')
 
             navigate_to_memescope()
             
             # Decide whether to sell any tokens in the portfolio
-            time.sleep(10)
+            time.sleep(30)
             sell()
             navigate_to_memescope()
         except Exception:
             print(traceback.format_exc())
         finally:
-            time.sleep(10)
+            time.sleep(30)
 
 # Scans graduated tokens, and returns one to be researched further
 def scan():
@@ -216,12 +217,10 @@ def sell():
         "content": message.content
     })
 
-    sellers = json.loads(message.content[0].text)
-    if len(sellers) > 0:
-        insert_message("I'm considering selling: " + ", ".join([f"{s['token_name']} ({s['reason']})" for s in sellers]))
-
     # For each token the AI is considering selling
-    for seller in sellers:
+    for seller in json.loads(message.content[0].text):
+        insert_message(f"I'm considering selling {seller['token_name']} ({seller['contract_address']}).\n\n{seller['reason']}", "considering_selling")
+
         driver.get(seller['liquidity_pool_url'])
         time.sleep(5)
 
@@ -257,7 +256,7 @@ def sell():
         messages.pop()
 
         sell, reason = json.loads(message.content[0].text).values()
-        insert_message(f"I've decided {'to sell' if sell else 'not to sell'} {seller['token_name']}. {reason}")
+        insert_message(f"I've decided {'to sell' if sell else 'not to sell'} {seller['token_name']} ({seller['contract_address']}).\n\n{reason}", "selling" if sell else "not_selling")
 
         # Sell if the AI decided to sell
         if sell:
@@ -385,12 +384,11 @@ def get_top_holders():
       for cols in [row.find_elements(By.CSS_SELECTOR, ".c-grid-table__td")]]
 
 # Inserts a message into the database
-def insert_message(message, should_print=True):
-    cursor.execute("INSERT INTO messages (message) VALUES (?)", (message,))
+def insert_message(message, category):
+    cursor.execute("INSERT INTO messages (message, category) VALUES (?, ?)", (message, category))
     connection.commit()
-    if should_print:
-        print(message)
-        print()
+    print(message)
+    print()
 
 if __name__ == '__main__':
     main()
