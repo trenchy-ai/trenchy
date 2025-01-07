@@ -54,13 +54,13 @@ def main():
             navigate_to_memescope()
             
             # Decide whether to sell any tokens in the portfolio
-            time.sleep(30)
+            time.sleep(60)
             sell()
             navigate_to_memescope()
         except Exception:
             print(traceback.format_exc())
         finally:
-            time.sleep(30)
+            time.sleep(60)
 
 # Scans graduated tokens, and returns one to be researched further
 def scan():
