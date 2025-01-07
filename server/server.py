@@ -29,4 +29,11 @@ def messages():
         connection.close()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=28273)
+    app.run(
+        host='0.0.0.0',
+        port=443,
+        ssl_context=(
+            '/etc/letsencrypt/live/api.trenchy.ai/fullchain.pem',
+            '/etc/letsencrypt/live/api.trenchy.ai/privkey.pem'
+        )
+    )
