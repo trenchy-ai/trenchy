@@ -219,7 +219,7 @@ def sell():
 
     # For each token the AI is considering selling
     for seller in json.loads(message.content[0].text):
-        insert_message(f"I'm considering selling {seller['token_name']} ({seller['contract_address']}).\n\n{seller['reason']}", "considering_selling")
+        insert_message(f"I'm considering selling {seller['token_name']}, {seller['contract_address']}.\n\n{seller['reason']}", "considering_selling")
 
         driver.get(seller['liquidity_pool_url'])
         time.sleep(5)
