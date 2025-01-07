@@ -23,7 +23,7 @@ async function main() {
 
 async function updateMessages() {
   console.log('Updating messages');
-  const response = await fetch(`http://localhost:28273/messages?last_message_id=${lastMessageId}`);
+  const response = await fetch(`http://${window.location.hostname}:28273/messages?last_message_id=${lastMessageId}`);
   const messages = await response.json();
   if (messages.length > 0) {
     lastMessageId = messages[0].id;
