@@ -18,7 +18,7 @@ async function main() {
   )));
 
   updateMessages();  
-  setInterval(updateMessages, 5000);
+  setInterval(updateMessages, 10000);
 }
 
 async function updateMessages() {
