@@ -29,4 +29,4 @@ def messages():
         connection.close()
 
 if __name__ == '__main__':
-    app.run(port=28273)
+    app.run(host='0.0.0.0', port=28273)
