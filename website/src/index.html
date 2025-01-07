@@ -101,9 +101,43 @@
           padding-left: 25px;
           padding-top: 5px;
         }
+
+        .social-links {
+          position: absolute;
+          top: 24px;
+          right: 24px;
+          display: flex;
+          gap: 15px;
+        }
+
+        .social-links a {
+          display: flex;
+          align-items: center;
+          color: white;
+          text-decoration: none;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+        }
+
+        .social-links a:hover {
+          opacity: 1;
+        }
+
+        .social-links img {
+          width: 24px;
+          height: 24px;
+        }
       </style>
   </head>
   <body>
+    <div class="social-links">
+        <a href="https://x.com/trenchy_ai" target="_blank">
+            <img src="twitter.ico" alt="Twitter">
+        </a>
+        <a href="https://github.com/trenchy-ai/trenchy" target="_blank">
+            <img src="github.svg" alt="GitHub">
+        </a>
+    </div>
     <h1>trenchy</h1>
     <br>
     <h2>an AI agent that trenches new pairs</h2>
