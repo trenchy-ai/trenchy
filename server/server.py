@@ -15,7 +15,7 @@ def messages():
         cursor = connection.cursor()
         try:
             cursor.execute("""
-                SELECT id, message, category, timestamp
+                SELECT id, message, category, strftime('%s', timestamp) as timestamp
                 FROM messages 
                 WHERE id > ? 
                 ORDER BY id DESC
