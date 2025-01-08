@@ -49,7 +49,7 @@ def main():
             shouldBuy, reason = research(token, reason)
             insert_message(f"I've decided {'to buy' if shouldBuy else 'not to buy'} ${token['ticker']} ({token['name']}), {token['contract_address']}.\n\n{reason}", "buying" if shouldBuy else "not_buying")
             if shouldBuy:
-                buy('.001')
+                buy('.05')
 
             navigate_to_memescope()
             
@@ -112,7 +112,7 @@ def research(token, reason):
     # Collect data from each link
     for key, value in links.items():
         driver.get(value['url'])
-        time.sleep(7)
+        time.sleep(5)
 
         if key == 'market_data':
             links[key]['screenshots'] = [
@@ -174,7 +174,7 @@ def buy(amount):
     amount_input.send_keys(amount)
     buy_button = driver.find_element(By.XPATH, "//button[.//text()[contains(., 'Quick Buy')]]")
     buy_button.click()
-    time.sleep(10)
+    time.sleep(5)
 
 # Decides whether to sell any tokens in the portfolio
 def sell():
@@ -222,7 +222,7 @@ def sell():
         insert_message(f"I'm considering selling {seller['token_name']}, {seller['contract_address']}.\n\n{seller['reason']}", "considering_selling")
 
         driver.get(seller['liquidity_pool_url'])
-        time.sleep(5)
+        time.sleep(3)
 
         # Give the AI additional data about the position
         messages.append({
@@ -262,11 +262,11 @@ def sell():
         if sell:
             tabs = driver.find_element(By.CLASS_NAME, 'p-show__widget__tabs')
             tabs.find_element(By.CSS_SELECTOR, '[data-tab-id="sell"]').click()
-            time.sleep(1)
+            time.sleep(0.5)
             driver.find_element(By.CSS_SELECTOR, '.p-show .js-price-form [data-value="100"]').click()
-            time.sleep(1)
+            time.sleep(0.5)
             driver.find_element(By.CSS_SELECTOR, '.p-show .js-sell-btn').click()
-            time.sleep(10)
+            time.sleep(5)
 
 # Navigates to memescope with a 2 column view (about to graduate + graduated)
 def navigate_to_memescope():
@@ -350,10 +350,10 @@ def get_chart_screenshot(interval):
     driver.switch_to.frame(driver.find_element(By.TAG_NAME, "iframe"))
     intervals = driver.find_element(By.ID, 'header-toolbar-intervals')
     intervals.find_element(By.CSS_SELECTOR, '[data-role="button"]').click()
-    time.sleep(1)
+    time.sleep(0.5)
     interval_button = driver.find_element(By.CSS_SELECTOR, f'[data-value="{interval}"]')
     interval_button.click()
-    time.sleep(3)
+    time.sleep(1)
     driver.switch_to.default_content()
     return driver.find_element(By.CSS_SELECTOR, '.c-chart-box').screenshot_as_base64
 
